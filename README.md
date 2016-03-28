@@ -1,16 +1,19 @@
 # QML
-Small example for starting an interface to [Qt5 QML](http://qt.io/). It uses the [`CppWrapper`](https://github.com/barche/CppWrapper) package to expose C++ classes. Current functionality allows loading a simple QML file and calling a Julia function without arguments returning either a `FLoat64` or an `Int64`.
+Small example for starting an interface to [Qt5 QML](http://qt.io/). It uses the [`CxxWrap`](https://github.com/barche/CxxWrap.jl) package to expose C++ classes. Current functionality allows loading a simple QML file, calling Julia functions and run a background task during event loop idle time. See test/gui.jl for details, docs not fully up-to-date.
 
 ## Installation
 This was tested on Linux and OS X. You need `cmake` in your path for installation to work.
 
-First install [`CppWrapper`](https://github.com/barche/CppWrapper). Compilation of `QML.jl` requires Qt to be reachable by CMake. If it is in a non-standard location, set the environment variable `CMAKE_PREFIX_PATH` to the base Qt directory before executing the following commands:
+First install [`CxxWrap`](https://github.com/barche/CxxWrap.jl). Compilation of `QML.jl` requires Qt to be reachable by CMake. If it is in a non-standard location, set the environment variable `CMAKE_PREFIX_PATH` to the base Qt directory (the one containing `lib` and `bin`) before executing the following commands:
 
 ```julia
 Pkg.clone("https://github.com/barche/QML.jl.git")
 Pkg.build("QML")
 Pkg.test("QML")
 ```
+
+You can check that the correct Qt version is used using the `qt_prefix_path()` function.
+
 ## Usage
 
 To run the QML file `main.qml` from the current directory, execute:
@@ -18,9 +21,13 @@ To run the QML file `main.qml` from the current directory, execute:
 using QML
 
 app = QML.application()
-e = QQmlApplicationEngine(QString("main.qml"))
+e = QQmlApplicationEngine("main.qml")
 QML.exec()
+finalize(app)
 ```
+
+### Preventing crash-on-exit
+To prevent a crash when exiting the program, the app object must be deleted manually, hence the call to `finalize(app)` in the above example.
 
 In QML, include the `JuliaContext` component:
 ```qml

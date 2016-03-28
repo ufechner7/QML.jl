@@ -1,17 +1,12 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
-import org.julialang 1.0
 
 ApplicationWindow {
     title: "My Application"
-    width: 640
-    height: 480
+    width: 480
+    height: 640
     visible: true
-
-    JuliaContext {
-      id: julia
-    }
 
     ColumnLayout {
       spacing: 6
@@ -56,6 +51,23 @@ ApplicationWindow {
       Text {
           Layout.alignment: Qt.AlignCenter
           text: julia.call("string", [oldcounter, ", ", upperOut.text])
+      }
+
+      Button {
+          Layout.alignment: Qt.AlignCenter
+          text: "Start counting"
+          onClicked: timer.start()
+      }
+
+      Text {
+          Layout.alignment: Qt.AlignCenter
+          text: bg_counter.toString()
+      }
+
+      Button {
+          Layout.alignment: Qt.AlignCenter
+          text: "Stop counting"
+          onClicked: timer.stop()
       }
   }
 }
