@@ -9,4 +9,7 @@ app = QML.application()
 e = QQmlApplicationEngine(qml_file)
 QML.exec()
 
+# Needed to prevent crash-on-exit
+finalize(app)
+
 return
